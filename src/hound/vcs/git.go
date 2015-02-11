@@ -68,3 +68,20 @@ func (g *GitDriver) Clone(dir, url string) (string, error) {
 
 	return g.HeadHash(dir)
 }
+
+
+func (g *GitDriver) ListFiles(dir string) ([]string, error) {
+	cmd := exec.Command(
+		"git",
+		"ls-files")
+
+	cmd.Dir = dir
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		log.Printf("Failed to retrieve files for %s, see output below\n%sContinuing...", dir, out)
+		return nil, err
+	}
+
+	return strings.Split(string(out), "\n"), nil
+}
+

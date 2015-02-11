@@ -9,6 +9,7 @@ type Driver interface {
 	Clone(dir, url string) (string, error)
 	Pull(dir string) (string, error)
 	HeadHash(dir string) (string, error)
+	ListFiles(dir string) ([]string, error)
 }
 
 var drivers = make(map[string]Driver)
@@ -47,6 +48,14 @@ func HeadHash(vcs, dir string) (string, error) {
 		return "", fmt.Errorf("vcs: unknown driver %q", vcs)
 	}
 	return driver.HeadHash(dir)
+}
+
+func ListFiles(vcs, dir string) ([]string, error) {
+	driver, ok := drivers[vcs]
+	if !ok {
+		return nil, fmt.Errorf("vcs: unkown driver %q", vcs)
+	}
+	return driver.ListFiles(dir)
 }
 
 func exists(path string) bool {

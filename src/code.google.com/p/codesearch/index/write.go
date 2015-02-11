@@ -159,13 +159,6 @@ func (ix *IndexWriter) Add(name string, f io.Reader) string {
 		if n++; n >= 3 {
 			ix.trigram.Add(tv)
 		}
-		if !validUTF8((tv>>8)&0xFF, tv&0xFF) {
-			skipReason = "Invalid UTF-8"
-			if ix.LogSkip {
-				log.Printf("%s: %s\n", name, skipReason)
-			}
-			return skipReason
-		}
 		if n > maxFileLen {
 			skipReason = "Too long"
 			if ix.LogSkip {

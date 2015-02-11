@@ -11,7 +11,6 @@ import (
 	"path/filepath"
 	"sync"
 	"time"
-	"unicode/utf8"
 )
 
 const matchLimit = 5000
@@ -150,8 +149,8 @@ func (n *Index) Search(pat string, opt *SearchOptions) (*SearchResponse, error) 
 
 				return true, nil
 			}); err != nil {
-			return nil, err
-		}
+				return nil, err
+			}
 
 		if !hasMatch {
 			continue
@@ -190,7 +189,7 @@ func isTextFile(filename string) (bool, error) {
 
 	buf = buf[:n]
 
-	return utf8.Valid(buf), nil
+	return true, nil
 }
 
 func addFileToIndex(ix *index.IndexWriter, dst, src, path string) (string, error) {

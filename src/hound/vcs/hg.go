@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"io"
 	"io/ioutil"
+	"log"
 	"os/exec"
 	"path/filepath"
 	"strings"
@@ -69,4 +70,20 @@ func (g *MercurialDriver) Clone(dir, url string) (string, error) {
 	}
 
 	return g.HeadHash(dir)
+}
+
+func (g *MercurialDriver) ListFiles(dir string) ([]string, error) {
+	cmd := exec.Command(
+		"hg",
+		"ls",
+		"-R")
+
+	cmd.Dir = dir
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		log.Printf("Failed to retrieve files for %s, see output below\n%sContinuing...", dir, out)
+		return nil, err
+	}
+
+	return strings.Split(string(out), "\n"), nil
 }
